@@ -17,6 +17,15 @@
         <?php
         // DELETE
         if (isset($_POST['delete'])) {
+            if (isset($_POST['delete'])) { // add: && !empty($_POST['delete']
+                $delete = $conn->prepare("DELETE FROM employees WHERE e_id = ?");
+                $delete->bind_param("i", $delete_id);
+                $delete_id = $_POST['id'];
+                $delete->execute();
+                $delete->close();
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                die;
+            }
         }
 
         // UPDATE
@@ -42,7 +51,8 @@
                         <td>' . $row['p_name'] . '</td> 
                         <td>
                             <form class="actions" action="" method="POST">
-                                <button type="submit" name="delete" value="" >Delete</button>
+                                <input type="hidden" name="id" value="' . $row['e_id'] . '">
+                                <button type="submit" name="delete" value="' . $row['e_id'] . '">Delete</button>
                                 <button type="submit" name="update" value="">Update</button>
                             </form>
                         </td>   
