@@ -38,6 +38,17 @@
         if (isset($_POST['update'])) {
         }
 
+        // ADD NEW ROW - Project
+        if (isset($_POST['create_project'])) {
+            $newP = $conn->prepare("INSERT INTO projects (p_name) VALUES (?)");
+            $newP->bind_param("s", $name);
+            $name = $_POST['p_name'];
+            $newP->execute();
+            $newP->close();
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            die;
+        }
+
         // SELECT query
         $sql = 'SELECT projects.p_id, projects.p_name, GROUP_CONCAT(CONCAT_WS("  " , employees.e_name) SEPARATOR ", ") 
                 AS e_names FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id GROUP BY p_id';
@@ -69,10 +80,15 @@
         } else {
             echo "0 results";
         }
-
         $conn->close();
-
         ?>
+    </div>
+    <div>
+        <form action="" method="POST">
+            <label for="p_name">To add new project:</label><br>
+            <input type="text" id="p_name" name="p_name" placeholder="Project name"><br>
+            <input type="submit" name="create_project" value="Submit">
+        </form>
     </div>
     <footer>
     </footer>
