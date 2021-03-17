@@ -32,6 +32,17 @@
         if (isset($_POST['update'])) {
         }
 
+        // ADD NEW ROW - Employee
+        if (isset($_POST['create_employee'])) {
+            $newE = $conn->prepare("INSERT INTO employees (e_name) VALUES (?)");
+            $newE->bind_param("s", $name);
+            $name = $_POST['e_name'];
+            $newE->execute();
+            $newE->close();
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            die;
+        }
+
         // SELECT query
         $sql = 'SELECT DISTINCT e_id, e_name, p_name FROM employees LEFT JOIN projects ON employees.pro_id = projects.p_id';
         $result = mysqli_query($conn, $sql);
@@ -66,6 +77,13 @@
         $conn->close();
 
         ?>
+    </div>
+    <div>
+        <form action="" method="POST">
+            <label for="e_name">To add new employee:</label><br>
+            <input type="text" id="e_name" name="e_name" placeholder="Employee name"><br>
+            <input type="submit" name="create_employee" value="Submit">
+        </form>
     </div>
     <footer>
     </footer>
