@@ -98,7 +98,6 @@
         if (isset($_POST['update'])) {
             $crnt_name = $_POST['name'];
             $crnt_id = $_POST['id'];
-            print($crnt_id);
             print('<div>
                     <form action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
