@@ -68,6 +68,8 @@
                         <th>Projects</th>
                         <th>Actions</th>
                     </tr>');
+
+            $p_names_tmp = [];
             while ($row = mysqli_fetch_assoc($result)) {
                 print('<tr>
                         <td>' . $row['e_id'] . '</td>
@@ -85,32 +87,53 @@
                             </form>
                         </td>   
                     </tr>');
+                if (!($row['p_name'] == "")) {
+                    array_push($p_names_tmp, $row['p_name']);
+                }
             }
             print('</table>');
-        } else {
-            echo "0 results";
-        }
 
-        /*  UPDATE FORMS  */
-        if (isset($_POST['update'])) {
-            $crnt_name = $_POST['name'];
-            $crnt_id = $_POST['id'];
-            print('<div>
+            /*   ARRAY UPDATES / NOTES   */
+            // print_r($p_names_tmp); //Array ( [0] => C# course [1] => PHP course [2] => C# course [3] => Java course [4] => PHP course [5] => Java course [6] => PHP course )
+            // print('<br>');
+            $p_names = array_unique($p_names_tmp);
+            // print_r($p_names); //Array ( [0] => C# course [1] => PHP course [3] => Java course )
+
+            /*  UPDATE FORMS  */
+            if (isset($_POST['update'])) {
+                $crnt_name = $_POST['name'];
+                $crnt_id = $_POST['id'];
+                print('<div>
                     <form action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
                         <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
+                        <label for="cars">Choose a project:</label>
+                        <select name="projects" id="projects">');
+                for ($p = 0; $p <= count($p_names); $p++) {
+
+                    if ($p_names[$p] !== NULL) {
+                        $p_name = $p_names[$p];
+                        print('<option value="' . $p_name . '">' . $p_name . '</option>');
+                    }
+                }
+                print('</select>
                         <button type="submit" name="update_name">Change</button>
                     </form>
                 </div>');
-        } else {
-            print('<div>
+            } else {
+                print('<div>
                     <form action="" method="POST">
                         <label for="e_name">To add new employee:</label><br>
                         <input type="text" id="e_name" name="e_name" placeholder="Employee name"><br>
                         <input type="submit" name="create_employee" value="Submit">
                     </form>
                 </div>');
+            }
+        } else {
+            echo "0 results";
         }
+
+
 
         $conn->close();
         ?>
