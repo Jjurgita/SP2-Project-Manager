@@ -23,7 +23,7 @@
     <div>
         <?php
 
-        // DELETE
+        /*  DELETE  */
         if (isset($_POST['delete'])) { // add: && !empty($_POST['delete']
             $delete = $conn->prepare("DELETE FROM projects WHERE p_id = ?");
             $delete->bind_param("i", $delete_id);
@@ -34,11 +34,19 @@
             die;
         }
 
-        // UPDATE
-        if (isset($_POST['update'])) {
+        /*  UPDATE  */
+        if (isset($_POST['update_name'])) {
+            $id = $_POST['id'];
+            $update = $conn->prepare("UPDATE projects SET p_name = ? WHERE p_id = '$id'");
+            $update->bind_param("s", $new_name);
+            $new_name = $_POST['p_name'];
+            $update->execute();
+            $update->close();
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            die;
         }
 
-        // ADD NEW ROW - Project
+        /*  ADD NEW ROW - Project  */
         if (isset($_POST['create_project'])) {
             $newP = $conn->prepare("INSERT INTO projects (p_name) VALUES (?)");
             $newP->bind_param("s", $name);
@@ -54,6 +62,7 @@
                 AS e_names FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id GROUP BY p_id';
         $result = $conn->query($sql); // Same as: $result = mysqli_query($conn, $sql);
 
+        // If we have results more than 0, print content
         if ($result->num_rows > 0) { // Same as: (mysqli_num_rows($result)
             print('<table class="table">
                     <tr>
@@ -71,7 +80,11 @@
                                 <form class="actions" action="" method="POST">
                                     <input type="hidden" name="id" value="' . $row['p_id'] . '">
                                     <button type="submit" name="delete" value="' . $row['p_id'] . '">Delete</button>
-                                    <button type="submit" name="update" value="">Update</button>
+                                </form>
+                                <form class="actions" action="" method="POST">
+                                    <input type="hidden" name="id" value="' . $row['p_id'] . '">
+                                    <input type="hidden" name="name" value="' . $row['p_name'] . '">
+                                    <button type="submit" name="update" value="' . $row['p_id'] . '">Update</button>
                                 </form>
                             </td>
                         </tr>');
@@ -80,15 +93,31 @@
         } else {
             echo "0 results";
         }
+
+        /*  UPDATE FORMS  */
+        if (isset($_POST['update'])) {
+            $crnt_name = $_POST['name'];
+            $crnt_id = $_POST['id'];
+            print($crnt_id);
+            print('<div>
+                    <form action="" method="POST">
+                        <input type="hidden" name="id" value="' . $crnt_id . '">
+                        <input type="text" id="p_name" name="p_name" value="' . $crnt_name . '"><br>
+                        <button type="submit" name="update_name">Change</button>
+                    </form>
+                </div>');
+        } else {
+            print('<div>
+                    <form action="" method="POST">
+                        <label for="p_name">To add new project:</label><br>
+                        <input type="text" id="p_name" name="p_name" placeholder="Project name"><br>
+                        <input type="submit" name="create_project" value="Submit">
+                    </form>
+                </div>');
+        }
+
         $conn->close();
         ?>
-    </div>
-    <div>
-        <form action="" method="POST">
-            <label for="p_name">To add new project:</label><br>
-            <input type="text" id="p_name" name="p_name" placeholder="Project name"><br>
-            <input type="submit" name="create_project" value="Submit">
-        </form>
     </div>
     <footer>
     </footer>
