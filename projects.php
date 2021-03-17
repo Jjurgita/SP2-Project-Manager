@@ -24,7 +24,14 @@
         <?php
 
         // DELETE
-        if (isset($_POST['delete'])) {
+        if (isset($_POST['delete'])) { // add: && !empty($_POST['delete']
+            $delete = $conn->prepare("DELETE FROM projects WHERE p_id = ?");
+            $delete->bind_param("i", $delete_id);
+            $delete_id = $_POST['id'];
+            $delete->execute();
+            $delete->close();
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            die;
         }
 
         // UPDATE
@@ -34,9 +41,9 @@
         // SELECT query
         $sql = 'SELECT projects.p_id, projects.p_name, GROUP_CONCAT(CONCAT_WS("  " , employees.e_name) SEPARATOR ", ") 
                 AS e_names FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id GROUP BY p_id';
-        $result = mysqli_query($conn, $sql);
+        $result = $conn->query($sql); // Same as: $result = mysqli_query($conn, $sql);
 
-        if (mysqli_num_rows($result) > 0) {
+        if ($result->num_rows > 0) { // Same as: (mysqli_num_rows($result)
             print('<table class="table">
                     <tr>
                         <th>Id</th>
@@ -44,14 +51,15 @@
                         <th>Employees</th>
                         <th>Actions</th>
                     </tr>');
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($row = $result->fetch_assoc()) { // Same as: ($row = mysqli_fetch_assoc($result))
                 print('<tr>
                             <td>' . $row['p_id'] . '</td>
                             <td>' . $row['p_name'] . '</td>
                             <td>' . $row['e_names'] . '</td>
                             <td>
                                 <form class="actions" action="" method="POST">
-                                    <button type="submit" name="delete" value="" >Delete</button>
+                                    <input type="hidden" name="id" value="' . $row['p_id'] . '">
+                                    <button type="submit" name="delete" value="' . $row['p_id'] . '">Delete</button>
                                     <button type="submit" name="update" value="">Update</button>
                                 </form>
                             </td>
