@@ -7,6 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employees</title>
+    <style>
+        .table {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
@@ -29,7 +34,15 @@
         }
 
         // UPDATE
-        if (isset($_POST['update'])) {
+        if (isset($_POST['update_name'])) {
+            $id = $_POST['id'];
+            $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
+            $update->bind_param("s", $new_name);
+            $new_name = $_POST['e_name'];
+            $update->execute();
+            $update->close();
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            die;
         }
 
         // ADD NEW ROW - Employee
@@ -64,7 +77,11 @@
                             <form class="actions" action="" method="POST">
                                 <input type="hidden" name="id" value="' . $row['e_id'] . '">
                                 <button type="submit" name="delete" value="' . $row['e_id'] . '">Delete</button>
-                                <button type="submit" name="update" value="">Update</button>
+                            </form>
+                            <form class="actions" action="" method="POST">
+                                    <input type="hidden" name="id" value="' . $row['e_id'] . '">
+                                    <input type="hidden" name="name" value="' . $row['e_name'] . '">
+                                    <button type="submit" name="update" value="' . $row['e_id'] . '">Update</button>
                             </form>
                         </td>   
                     </tr>');
@@ -74,16 +91,29 @@
             echo "0 results";
         }
 
-        $conn->close();
+        /*  UPDATE FORMS  */
+        if (isset($_POST['update'])) {
+            $crnt_name = $_POST['name'];
+            $crnt_id = $_POST['id'];
+            print('<div>
+                    <form action="" method="POST">
+                        <input type="hidden" name="id" value="' . $crnt_id . '">
+                        <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
+                        <button type="submit" name="update_name">Change</button>
+                    </form>
+                </div>');
+        } else {
+            print('<div>
+                    <form action="" method="POST">
+                        <label for="e_name">To add new employee:</label><br>
+                        <input type="text" id="e_name" name="e_name" placeholder="Employee name"><br>
+                        <input type="submit" name="create_employee" value="Submit">
+                    </form>
+                </div>');
+        }
 
+        $conn->close();
         ?>
-    </div>
-    <div>
-        <form action="" method="POST">
-            <label for="e_name">To add new employee:</label><br>
-            <input type="text" id="e_name" name="e_name" placeholder="Employee name"><br>
-            <input type="submit" name="create_employee" value="Submit">
-        </form>
     </div>
     <footer>
     </footer>
