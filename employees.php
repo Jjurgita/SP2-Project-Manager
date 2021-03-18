@@ -16,9 +16,6 @@
 
 <body>
     <div>
-        Employees
-    </div>
-    <div>
         <?php
         /*  DELETE  */
         if (isset($_POST['delete'])) {
@@ -35,38 +32,23 @@
 
         /*  UPDATE  */
         /* ASSIGN EMPLOYEE TO PROJECT  */
+
         if (isset($_POST['update_name'])) {
-            if ($_POST['p_name'] !== "") { // still ERROR - inserted project as new employee
-                $id = $_POST['id'];
+            $id = $_POST['id'];
+            $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
+            $update->bind_param("s", $new_name);
+            $new_name = $_POST['e_name'];
+            $update->execute();
+            $update->close();
 
-                $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
-                $newE_P = $conn->prepare("INSERT INTO employees (pro_id) VALUES (?)");
-
-                $update->bind_param("s", $new_name);
-                $new_name = $_POST['e_name'];
-
-                $newE_P->bind_param("i", $p_id);
-                $p_id = $_POST['p_name'];
-
-                $update->execute();
-                $newE_P->execute();
-
-                $update->close();
-                $newE_P->close();
-
-                header('Location: ' . $_SERVER['REQUEST_URI']);
-                die;
-            } else {
-                $id = $_POST['id'];
-                $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
-                $update->bind_param("s", $new_name);
-                $new_name = $_POST['e_name'];
-                $update->execute();
-                $update->close();
-                header('Location: ' . $_SERVER['REQUEST_URI']);
-                die;
-            }
+            // Assign employee
+            $newE_P = $conn->prepare("UPDATE employees SET pro_id = ? WHERE e_id = '$id'");
+            $newE_P->bind_param("i", $p_id);
+            $p_id = $_POST['p_name'];
+            $newE_P->execute();
+            $newE_P->close();
         }
+        // NOTE: You use the WHERE clause for UPDATE queries. When you INSERT, you are assuming that the row doesn't exist.
 
         /*  ADD NEW ROW - Employee  */
         if (isset($_POST['create_employee'])) {
@@ -79,7 +61,7 @@
             die;
         }
 
-        // SELECT query
+        // SELECT query for tables
         $sql = 'SELECT DISTINCT e_id, e_name, p_name FROM employees LEFT JOIN projects ON employees.pro_id = projects.p_id';
         $result = mysqli_query($conn, $sql);
 
@@ -91,8 +73,6 @@
                         <th>Projects</th>
                         <th>Actions</th>
                     </tr>');
-
-            $p_names_tmp = [];
             while ($row = mysqli_fetch_assoc($result)) {
                 print('<tr>
                         <td>' . $row['e_id'] . '</td>
@@ -110,9 +90,6 @@
                             </form>
                         </td>   
                     </tr>');
-                if (!($row['p_name'] == "")) {
-                    array_push($p_names_tmp, $row['p_name']);
-                }
             }
             print('</table>');
 
@@ -126,8 +103,7 @@
                         <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
                         <select name="p_name" id="p_name">
                             <option value="0">Projects</option>');
-
-                $upd = 'SELECT DISTINCT p_id, p_name  FROM employees  LEFT JOIN projects ON employees.pro_id = projects.p_id WHERE pro_id'; //SELECT quesry for drop table
+                $upd = 'SELECT DISTINCT p_id, p_name FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id';
                 $upd_result = mysqli_query($conn, $upd);
                 while ($row = mysqli_fetch_assoc($upd_result)) {
                     print('<option name="p_name" id="p_name" value="' . $row['p_id'] . '">' . $row['p_name'] . '</option>');
