@@ -20,7 +20,7 @@
     </div>
     <div>
         <?php
-        // DELETE
+        /*  DELETE  */
         if (isset($_POST['delete'])) {
             if (isset($_POST['delete'])) { // add: && !empty($_POST['delete']
                 $delete = $conn->prepare("DELETE FROM employees WHERE e_id = ?");
@@ -33,19 +33,42 @@
             }
         }
 
-        // UPDATE
+        /*  UPDATE  */
+        /* ASSIGN EMPLOYEE TO PROJECT  */
         if (isset($_POST['update_name'])) {
-            $id = $_POST['id'];
-            $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
-            $update->bind_param("s", $new_name);
-            $new_name = $_POST['e_name'];
-            $update->execute();
-            $update->close();
-            header('Location: ' . $_SERVER['REQUEST_URI']);
-            die;
+            if ($_POST['p_name'] !== "") { // still ERROR - inserted project as new employee
+                $id = $_POST['id'];
+
+                $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
+                $newE_P = $conn->prepare("INSERT INTO employees (pro_id) VALUES (?)");
+
+                $update->bind_param("s", $new_name);
+                $new_name = $_POST['e_name'];
+
+                $newE_P->bind_param("i", $p_id);
+                $p_id = $_POST['p_name'];
+
+                $update->execute();
+                $newE_P->execute();
+
+                $update->close();
+                $newE_P->close();
+
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                die;
+            } else {
+                $id = $_POST['id'];
+                $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
+                $update->bind_param("s", $new_name);
+                $new_name = $_POST['e_name'];
+                $update->execute();
+                $update->close();
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                die;
+            }
         }
 
-        // ADD NEW ROW - Employee
+        /*  ADD NEW ROW - Employee  */
         if (isset($_POST['create_employee'])) {
             $newE = $conn->prepare("INSERT INTO employees (e_name) VALUES (?)");
             $newE->bind_param("s", $name);
@@ -93,12 +116,6 @@
             }
             print('</table>');
 
-            /*   ARRAY UPDATES / NOTES   */
-            // print_r($p_names_tmp); //Array ( [0] => C# course [1] => PHP course [2] => C# course [3] => Java course [4] => PHP course [5] => Java course [6] => PHP course )
-            // print('<br>');
-            $p_names = array_unique($p_names_tmp);
-            // print_r($p_names); //Array ( [0] => C# course [1] => PHP course [3] => Java course )
-
             /*  UPDATE FORMS  */
             if (isset($_POST['update'])) {
                 $crnt_name = $_POST['name'];
@@ -107,14 +124,13 @@
                     <form action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
                         <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
-                        <label for="cars">Choose a project:</label>
-                        <select name="projects" id="projects">');
-                for ($p = 0; $p <= count($p_names); $p++) {
+                        <select name="p_name" id="p_name">
+                            <option value="0">Projects</option>');
 
-                    if ($p_names[$p] !== NULL) {
-                        $p_name = $p_names[$p];
-                        print('<option value="' . $p_name . '">' . $p_name . '</option>');
-                    }
+                $upd = 'SELECT DISTINCT p_id, p_name  FROM employees  LEFT JOIN projects ON employees.pro_id = projects.p_id WHERE pro_id'; //SELECT quesry for drop table
+                $upd_result = mysqli_query($conn, $upd);
+                while ($row = mysqli_fetch_assoc($upd_result)) {
+                    print('<option name="p_name" id="p_name" value="' . $row['p_id'] . '">' . $row['p_name'] . '</option>');
                 }
                 print('</select>
                         <button type="submit" name="update_name">Change</button>
@@ -132,8 +148,6 @@
         } else {
             echo "0 results";
         }
-
-
 
         $conn->close();
         ?>
