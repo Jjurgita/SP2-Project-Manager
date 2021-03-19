@@ -51,13 +51,17 @@
 
         /*  ADD NEW ROW - Employee  */
         if (isset($_POST['create_employee'])) {
-            $newE = $conn->prepare("INSERT INTO employees (e_name) VALUES (?)");
-            $newE->bind_param("s", $name);
-            $name = $_POST['e_name'];
-            $newE->execute();
-            $newE->close();
-            header('Location: ' . $_SERVER['REQUEST_URI']);
-            die;
+            if ($_POST['e_name'] !== "") {
+                $newE = $conn->prepare("INSERT INTO employees (e_name) VALUES (?)");
+                $newE->bind_param("s", $name);
+                $name = $_POST['e_name'];
+                $newE->execute();
+                $newE->close();
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                die;
+            } else {
+                print('<p style="color: red;">ERROR: Employee name section is empty.<br> Please write employee name one more time.</p>');
+            }
         }
 
         // SELECT query for tables

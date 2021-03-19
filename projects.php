@@ -41,13 +41,17 @@
 
         /*  ADD NEW ROW - Project  */
         if (isset($_POST['create_project'])) {
-            $newP = $conn->prepare("INSERT INTO projects (p_name) VALUES (?)");
-            $newP->bind_param("s", $name);
-            $name = $_POST['p_name'];
-            $newP->execute();
-            $newP->close();
-            header('Location: ' . $_SERVER['REQUEST_URI']);
-            die;
+            if ($_POST['p_name'] !== "") {
+                $newP = $conn->prepare("INSERT INTO projects (p_name) VALUES (?)");
+                $newP->bind_param("s", $name);
+                $name = $_POST['p_name'];
+                $newP->execute();
+                $newP->close();
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                die;
+            } else {
+                print('<p style="color: red;">ERROR: Project name section is empty.<br> Please write Project name one more time.</p>');
+            }
         }
 
         // SELECT query
