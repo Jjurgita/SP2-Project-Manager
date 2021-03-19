@@ -49,3 +49,9 @@ form {
   border: none;
   border-bottom: 2px solid #ddd;
 }
+.actions > .form-select {
+  font-size: 16px;
+  margin: 5px 0 15px 0;
+  border: none;
+  border-bottom: 2px solid #ddd;
+}

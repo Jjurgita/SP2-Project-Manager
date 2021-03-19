@@ -102,14 +102,15 @@
                     <form class="actions" action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
                         <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
-                        <select class="actions" name="p_name" id="p_name">
-                            <option value="0">Projects</option>');
+                        <select class="form-select" aria-label="Default select example" name="p_name" id="p_name">
+                            <option selected>Projects</option>');
                 $upd = 'SELECT DISTINCT p_id, p_name FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id';
                 $upd_result = mysqli_query($conn, $upd);
                 while ($row = mysqli_fetch_assoc($upd_result)) {
                     print('<option name="p_name" id="p_name" value="' . $row['p_id'] . '">' . $row['p_name'] . '</option>');
                 }
                 print('</select>
+                        <br>
                         <button class="btn btn-primary" type="submit" name="update_name">Change</button>
                     </form>
                 </div>');
