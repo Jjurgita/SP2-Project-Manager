@@ -1,0 +1,51 @@
+body,
+body * {
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+.header {
+  color: white;
+  background-color: rgb(252, 89, 89);
+  padding: 20px;
+  box-shadow: 0 4px 8px rgb(253, 173, 173);
+}
+.header > .title {
+  padding-bottom: 10px;
+  text-align: center;
+}
+.header > .nav {
+  font-size: 16px;
+  display: inline-block;
+  padding-right: 30px;
+}
+.header > .nav a {
+  color: white;
+  text-decoration: none;
+}
+.tbl_name {
+  font-size: 24px;
+  padding: 10px;
+}
+.main_table {
+  padding: 0 20px 10px 20px;
+}
+.main_table th {
+  font-size: 16px;
+}
+form {
+  display: inline-block;
+}
+.actions > .btn {
+  padding: 3px 12px;
+}
+.actions > label {
+  font-size: 16px;
+}
+.actions > input {
+  font-size: 16px;
+  margin: 10px 0 15px 0;
+  border: none;
+  border-bottom: 2px solid #ddd;
+}
