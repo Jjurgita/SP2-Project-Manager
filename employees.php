@@ -6,16 +6,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
     <title>Employees</title>
-    <style>
-        .table {
-            border: 1px solid black;
-        }
-    </style>
 </head>
 
 <body>
-    <div>
+    <div class="main_table">
         <?php
         /*  DELETE  */
         if (isset($_POST['delete'])) {
@@ -66,13 +65,15 @@
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) > 0) {
-            print('<table class="table">
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Projects</th>
-                        <th>Actions</th>
-                    </tr>');
+            print('<table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Projects</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>');
             while ($row = mysqli_fetch_assoc($result)) {
                 print('<tr>
                         <td>' . $row['e_id'] . '</td>
@@ -81,12 +82,12 @@
                         <td>
                             <form class="actions" action="" method="POST">
                                 <input type="hidden" name="id" value="' . $row['e_id'] . '">
-                                <button type="submit" name="delete" value="' . $row['e_id'] . '">Delete</button>
+                                <button class="btn btn-default" type="submit" name="delete" value="' . $row['e_id'] . '">Delete</button>
                             </form>
                             <form class="actions" action="" method="POST">
                                     <input type="hidden" name="id" value="' . $row['e_id'] . '">
                                     <input type="hidden" name="name" value="' . $row['e_name'] . '">
-                                    <button type="submit" name="update" value="' . $row['e_id'] . '">Update</button>
+                                    <button class="btn btn-primary" type="submit" name="update" value="' . $row['e_id'] . '">Update</button>
                             </form>
                         </td>   
                     </tr>');
@@ -98,10 +99,10 @@
                 $crnt_name = $_POST['name'];
                 $crnt_id = $_POST['id'];
                 print('<div>
-                    <form action="" method="POST">
+                    <form class="actions" action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
                         <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
-                        <select name="p_name" id="p_name">
+                        <select class="actions" name="p_name" id="p_name">
                             <option value="0">Projects</option>');
                 $upd = 'SELECT DISTINCT p_id, p_name FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id';
                 $upd_result = mysqli_query($conn, $upd);
@@ -109,27 +110,24 @@
                     print('<option name="p_name" id="p_name" value="' . $row['p_id'] . '">' . $row['p_name'] . '</option>');
                 }
                 print('</select>
-                        <button type="submit" name="update_name">Change</button>
+                        <button class="btn btn-primary" type="submit" name="update_name">Change</button>
                     </form>
                 </div>');
             } else {
                 print('<div>
-                    <form action="" method="POST">
+                    <form class="actions" action="" method="POST">
                         <label for="e_name">To add new employee:</label><br>
                         <input type="text" id="e_name" name="e_name" placeholder="Employee name"><br>
-                        <input type="submit" name="create_employee" value="Submit">
+                        <button class="btn btn-primary" type="submit" name="create_employee">Submit</button>
                     </form>
                 </div>');
             }
         } else {
             echo "0 results";
         }
-
         $conn->close();
         ?>
     </div>
-    <footer>
-    </footer>
 </body>
 
 </html>
