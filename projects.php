@@ -6,23 +6,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
     <title>Projects</title>
-    <style>
-        .table {
-            border: 1px solid black;
-        }
-    </style>
 </head>
 
 <body>
-    <header>
-        <div>
-            Projects
-        </div>
-    </header>
-    <div>
+    <div class="main_table">
         <?php
-
         /*  DELETE  */
         if (isset($_POST['delete'])) { // add: && !empty($_POST['delete']
             $delete = $conn->prepare("DELETE FROM projects WHERE p_id = ?");
@@ -64,13 +57,15 @@
 
         // If we have results more than 0, print content
         if ($result->num_rows > 0) { // Same as: (mysqli_num_rows($result)
-            print('<table class="table">
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Employees</th>
-                        <th>Actions</th>
-                    </tr>');
+            print('<table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Employees</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>');
             while ($row = $result->fetch_assoc()) { // Same as: ($row = mysqli_fetch_assoc($result))
                 print('<tr>
                             <td>' . $row['p_id'] . '</td>
@@ -79,12 +74,12 @@
                             <td>
                                 <form class="actions" action="" method="POST">
                                     <input type="hidden" name="id" value="' . $row['p_id'] . '">
-                                    <button type="submit" name="delete" value="' . $row['p_id'] . '">Delete</button>
+                                    <button class="btn btn-default" type="submit" name="delete" value="' . $row['p_id'] . '">Delete</button>
                                 </form>
                                 <form class="actions" action="" method="POST">
                                     <input type="hidden" name="id" value="' . $row['p_id'] . '">
                                     <input type="hidden" name="name" value="' . $row['p_name'] . '">
-                                    <button type="submit" name="update" value="' . $row['p_id'] . '">Update</button>
+                                    <button class="btn btn-primary" type="submit" name="update" value="' . $row['p_id'] . '">Update</button>
                                 </form>
                             </td>
                         </tr>');
@@ -99,27 +94,25 @@
             $crnt_name = $_POST['name'];
             $crnt_id = $_POST['id'];
             print('<div>
-                    <form action="" method="POST">
+                    <form class="actions" action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
-                        <input type="text" id="p_name" name="p_name" value="' . $crnt_name . '"><br>
-                        <button type="submit" name="update_name">Change</button>
+                        <input type="text" id="p_name" name="p_name" value="' . $crnt_name . '">
+                        <br>
+                        <button class="btn btn-primary" type="submit" name="update_name">Change</button>
                     </form>
                 </div>');
         } else {
             print('<div>
-                    <form action="" method="POST">
+                    <form class="actions" action="" method="POST">
                         <label for="p_name">To add new project:</label><br>
                         <input type="text" id="p_name" name="p_name" placeholder="Project name"><br>
-                        <input type="submit" name="create_project" value="Submit">
+                        <button class="btn btn-primary" type="submit" name="create_project">Submit</button>
                     </form>
                 </div>');
         }
-
         $conn->close();
         ?>
     </div>
-    <footer>
-    </footer>
 </body>
 
 </html>
