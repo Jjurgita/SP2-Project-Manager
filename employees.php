@@ -18,7 +18,7 @@
         <?php
         /*  DELETE  */
         if (isset($_POST['delete'])) {
-            if (isset($_POST['delete'])) { // add: && !empty($_POST['delete']
+            if (isset($_POST['delete'])) {
                 $delete = $conn->prepare("DELETE FROM employees WHERE e_id = ?");
                 $delete->bind_param("i", $delete_id);
                 $delete_id = $_POST['id'];
@@ -31,7 +31,6 @@
 
         /*  UPDATE  */
         /* ASSIGN EMPLOYEE TO PROJECT  */
-
         if (isset($_POST['update_name'])) {
             $id = $_POST['id'];
             $update = $conn->prepare("UPDATE employees SET e_name = ? WHERE e_id = '$id'");
@@ -39,13 +38,17 @@
             $new_name = $_POST['e_name'];
             $update->execute();
             $update->close();
-
             // Assign employee
-            $newE_P = $conn->prepare("UPDATE employees SET pro_id = ? WHERE e_id = '$id'");
-            $newE_P->bind_param("i", $p_id);
-            $p_id = $_POST['p_name'];
-            $newE_P->execute();
-            $newE_P->close();
+            if ($_POST['p_name']) {
+                $newE_P = $conn->prepare("UPDATE employees SET pro_id = ? WHERE e_id = '$id'");
+                $newE_P->bind_param("i", $p_id);
+                $p_id = $_POST['p_name'];
+                $newE_P->execute();
+                $newE_P->close();
+            } else { // Set project id to NULL
+                $newE_P = "UPDATE employees SET pro_id = NULL WHERE e_id = '$id'";
+                $res = mysqli_query($conn, $newE_P);
+            }
         }
         // NOTE: You use the WHERE clause for UPDATE queries. When you INSERT, you are assuming that the row doesn't exist.
 
@@ -102,12 +105,14 @@
             if (isset($_POST['update'])) {
                 $crnt_name = $_POST['name'];
                 $crnt_id = $_POST['id'];
+                $null = NULL;
                 print('<div>
                     <form class="actions" action="" method="POST">
                         <input type="hidden" name="id" value="' . $crnt_id . '">
                         <input type="text" id="e_name" name="e_name" value="' . $crnt_name . '"><br>
                         <select class="form-select" aria-label="Default select example" name="p_name" id="p_name">
-                            <option selected>Projects</option>');
+                            <option selected>Projects</option>
+                            <option name="null" id="null" value="' . $null . '"></option>');
                 $upd = 'SELECT DISTINCT p_id, p_name FROM projects LEFT JOIN employees ON projects.p_id = employees.pro_id';
                 $upd_result = mysqli_query($conn, $upd);
                 while ($row = mysqli_fetch_assoc($upd_result)) {
