@@ -1,8 +1,8 @@
 <?php
 
-$servername = "127.0.0.1"; // pakeisti
-$username = "root";
-$password = "mysqlroot";
+$servername = "127.0.0.1"; // change to your own server name, for example "localhost"
+$username = "root"; // default user 
+$password = "mysqlroot"; // add your own server password
 $dbname = "sprint2";
 
 // Create connection
