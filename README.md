@@ -40,17 +40,14 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
     ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
     INSERT INTO projects VALUES (1,'PHP course'),(2,'Java course'),(3,'C# course'),(5,'.NET course'),(19,'JavaScript course');
-
 ```
 
 4. Update `db_connection.php` file with your own MySQL connection parameters
 
 ```
-    <?php
     $servername = "127.0.0.1"; // change to your own server name, for example "localhost"
     $username = "root"; // default username
     $password = "mysqlroot"; // add your own server password
-    ?>
 ```
 
 5. Open project with web browser (e.g. http://localhost/project-manager/)
