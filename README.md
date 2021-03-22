@@ -62,12 +62,9 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
 <li> Update employees table: add/delete/update employee data and assign project to employee</li>
 </ul>
 
-<hr>
-<img scr="./img/1.png">
-<hr>
-<img scr="./img/2.png">
-<hr>
-<img scr="./img/3.png">
+<img src="./img/1.png">
+<img src="./img/2.png">
+<img src="./img/3.png">
 
 ## Authors
 
