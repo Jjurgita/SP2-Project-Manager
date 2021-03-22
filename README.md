@@ -21,6 +21,14 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
     CREATE DATABASE IF NOT EXISTS sprint2;
     USE sprint2;
 
+    CREATE TABLE projects (
+    p_id int NOT NULL AUTO_INCREMENT,
+    p_name varchar(255) DEFAULT NULL,
+    PRIMARY KEY (p_id)
+    ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    INSERT INTO projects VALUES (1,'PHP course'),(2,'Java course'),(3,'C# course'),(5,'.NET course'),(19,'JavaScript course');
+
     CREATE TABLE employees (
     e_id int NOT NULL AUTO_INCREMENT,
     e_name varchar(255) DEFAULT NULL,
@@ -32,14 +40,6 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
     ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
     INSERT INTO employees VALUES (1,'Ona',19),(2,'Petras',5),(3,'Jonas',NULL),(4,'Vytis',1),(6,'Juozas',5),(7,'Sigitas',NULL),(8,'Mindaugas',3),(9,'Jurgita',1);
-
-    CREATE TABLE projects (
-    p_id int NOT NULL AUTO_INCREMENT,
-    p_name varchar(255) DEFAULT NULL,
-    PRIMARY KEY (p_id)
-    ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-    INSERT INTO projects VALUES (1,'PHP course'),(2,'Java course'),(3,'C# course'),(5,'.NET course'),(19,'JavaScript course');
 ```
 
 4. Update `db_connection.php` file with your own MySQL connection parameters
