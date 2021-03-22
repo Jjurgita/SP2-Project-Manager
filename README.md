@@ -46,8 +46,8 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
 
 ```
     $servername = "127.0.0.1"; // change to your own server name, for example "localhost"
-    $username = "root"; // default username
-    $password = "mysqlroot"; // add your own server password
+    $username = "root"; // default username is root; if other change to your own
+    $password = "mysqlroot"; // change to your own server password
 ```
 
 5. Open project with web browser (e.g. http://localhost/project-manager/)
