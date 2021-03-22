@@ -11,7 +11,7 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
 - [MySQL](https://dev.mysql.com/downloads/installer/) Database Service
 - [XAMPP](https://www.apachefriends.org/download.html), [AMPPS](https://ampps.com/download) or other open-source web server platform
 
-## How to use?
+## Installation & Configuration
 
 1. Download ZIP with latest version from master branch or clone repository https
 2. Copy all the files to your website (XAMPP/AMPPS/other) folder
@@ -52,7 +52,9 @@ The second PHP sprint task is to create a CRUD (create/read/update/delete data f
 
 5. Open project with web browser (e.g. http://localhost/project-manager/)
 
-## Ability to:
+## Project Features
+
+### Ability to:
 
 <ul>
 <li> See all projects and employees information in separate pages</li>
